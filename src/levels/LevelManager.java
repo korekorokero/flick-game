@@ -3,20 +3,20 @@ package levels;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
-import main.GamePanel;
+import main.Game;
 import utilz.LoadSave;
 
 public class LevelManager {
-	private GamePanel gamePanel;
+	private Game game;
 	private BufferedImage[] levelSprite;
 	public final static int size = 64;
 	private Level levelOne;
 	public boolean gameMode = false;
 	
-	public LevelManager(GamePanel gamePanel) {
-		this.gamePanel = gamePanel;
+	public LevelManager(Game game) {
+		this.game = game;
 		importOutsideSprites();
-		levelOne = new Level(LoadSave.getLevelData(LoadSave.TEST_LEVEL_DATA));
+		levelOne = new Level(LoadSave.getLevelData(LoadSave.LEVEL_ONE_DATA));
 	}
 	
 	private void importOutsideSprites() {
@@ -39,10 +39,10 @@ public class LevelManager {
 				int index = levelOne.getSpriteIndex(i, j);
 				if (index >= 0) {
 					if (!gameMode && index < 16) {						
-						g.drawImage(levelSprite[index], (i * GamePanel.TILES_SIZE), (j * GamePanel.TILES_SIZE), size, size, null);
+						g.drawImage(levelSprite[index], (i * Game.TILES_SIZE), (j * Game.TILES_SIZE), size, size, null);
 					}
 					else if (gameMode && index >= 16) {
-						g.drawImage(levelSprite[index], (i * GamePanel.TILES_SIZE), ((j - 9) * GamePanel.TILES_SIZE), size, size, null);
+						g.drawImage(levelSprite[index], (i * Game.TILES_SIZE), ((j - 9) * Game.TILES_SIZE), size, size, null);
 					}
 				}
 			}

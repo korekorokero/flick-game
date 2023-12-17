@@ -1,6 +1,6 @@
 package utilz;
 
-import main.GamePanel;
+import main.Game;
 
 public class HelpMethods {
 	public static boolean canMoveHere(float x, float y, int width, int height, int[][] lvlData, boolean gameMode) {
@@ -19,21 +19,21 @@ public class HelpMethods {
 	}
 	
 	private static boolean isSolid(float x, float y, int[][] lvlData, boolean gameMode) {
-		if (x < 0 || x >= GamePanel.GAME_WIDTH) {
+		if (x < 0 || x >= Game.GAME_WIDTH) {
 			return true;
 		}
 		
-		if (y < 0 || y >= GamePanel.GAME_HEIGHT) {
+		if (y < 0 || y >= Game.GAME_HEIGHT) {
 			return true;
 		}
 		
-		float xIndex = x / GamePanel.TILES_SIZE;
+		float xIndex = x / Game.TILES_SIZE;
 		float yIndex;
 		if (!gameMode) {			
-			yIndex = y / GamePanel.TILES_SIZE;
+			yIndex = y / Game.TILES_SIZE;
 		}
 		else {
-			yIndex = (y + GamePanel.GAME_HEIGHT) / GamePanel.TILES_SIZE;
+			yIndex = (y + Game.GAME_HEIGHT) / Game.TILES_SIZE;
 		}
 		
 		int value = lvlData[(int)xIndex][(int)yIndex];
