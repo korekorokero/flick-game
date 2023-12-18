@@ -9,40 +9,48 @@ import utilz.LoadSave;
 public class LevelManager {
 	private Game game;
 	private BufferedImage[] levelSprite;
-	public final static int size = 64;
+	public int size = Game.TILES_SIZE;
 	private Level levelOne;
 	public boolean gameMode = false;
 	
 	public LevelManager(Game game) {
 		this.game = game;
 		importOutsideSprites();
-		levelOne = new Level(LoadSave.getLevelData(LoadSave.LEVEL_ONE_DATA));
+		levelOne = new Level(LoadSave.getLevelData(LoadSave.TEST_LEVEL_DATA));
 	}
 	
 	private void importOutsideSprites() {
 		BufferedImage img = LoadSave.getSpriteAtlas(LoadSave.LEVEL_ATLAS);
-		levelSprite = new BufferedImage[34];
+		levelSprite = new BufferedImage[66];
 		
 		for(int i = 0; i < 2; i++) {
-			for(int j = 0; j < 16; j++) {
-				int index = j + i * 16;
-				levelSprite[index] = img.getSubimage(j * 32, i * 32, 32, 32);
+			for(int j = 0; j < 32; j++) {
+				int index = j + i * 32;
+				if(i == 0 && index >= 12) {
+					levelSprite[index] = img.getSubimage((j - 12) * 32, 2 * 32, 32, 32);
+				}
+				else if(i == 1 && index >= 44) {
+					levelSprite[index] = img.getSubimage((j - 12) * 32, 3 * 32, 32, 32);
+				}
+				else {					
+					levelSprite[index] = img.getSubimage(j * 32, i * 32, 32, 32);
+				}
 			}
-			levelSprite[i + 32] = img.getSubimage(i * 32, 64, 32, 32);
+			levelSprite[i + 64] = img.getSubimage(12 * 32, i * 32, 32, 32);
 		}
 		
 	}
 	
-	public void draw(Graphics g) {
-		for(int i = 0; i < 16; i++) {			
-			for(int j = 0; j < 18; j++) {
+	public void draw(Graphics g, int xLvlOffset, int yLvlOffset) {
+		for(int i = 0; i < 20; i++) {			
+			for(int j = 0; j < 40; j++) {
 				int index = levelOne.getSpriteIndex(i, j);
 				if (index >= 0) {
-					if (!gameMode && index < 16) {						
-						g.drawImage(levelSprite[index], (i * Game.TILES_SIZE), (j * Game.TILES_SIZE), size, size, null);
+					if (!gameMode && (index < 32 || index == 64)) {						
+						g.drawImage(levelSprite[index], (i * size) - xLvlOffset, (j * size) - yLvlOffset, size, size, null);
 					}
-					else if (gameMode && index >= 16) {
-						g.drawImage(levelSprite[index], (i * Game.TILES_SIZE), ((j - 9) * Game.TILES_SIZE), size, size, null);
+					else if (gameMode && (index >= 32 || index == 65)) {
+						g.drawImage(levelSprite[index], (i * size) - xLvlOffset, ((j - 20) * size) - yLvlOffset, size, size, null);
 					}
 				}
 			}

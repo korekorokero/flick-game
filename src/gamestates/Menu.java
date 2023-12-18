@@ -4,12 +4,18 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 
 import main.Game;
+import utilz.LoadSave;
 
 public class Menu extends State implements Statemethods {
+	private BufferedImage img;
+	private boolean mouseHold = false;
+	
 	public Menu(Game game) {
 		super(game);
+		img = LoadSave.getSpriteAtlas(LoadSave.MENU_ATLAS);
 	}
 
 	@Override
@@ -20,25 +26,39 @@ public class Menu extends State implements Statemethods {
 
 	@Override
 	public void draw(Graphics g) {
-		g.setColor(Color.red);
-		g.drawString("Main Menu", Game.GAME_WIDTH / 2, 200);
+		g.setColor(Color.white);
+		g.fillRect(0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT);
+		g.drawImage(img.getSubimage(0, 32, 64, 32), 384, 356, 256, 128, null);
+		g.drawImage(img.getSubimage(0, 0, 64, 32), 256, 48, 512, 256, null);
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
+		if((e.getX() >= 384 && e.getX() <= 639) && (e.getY() >= 356 && e.getY() <= 447)) {
+			playGame();
+		}
 		
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
+		if((e.getX() >= 384 && e.getX() <= 639) && (e.getY() >= 356 && e.getY() <= 447)) {
+			mouseHold = true;
+		}
+		else {
+			mouseHold = false;
+		}
 		
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
+		if(mouseHold && (e.getX() >= 384 && e.getX() <= 639) && (e.getY() >= 356 && e.getY() <= 447)) {
+			playGame();
+		}
+		else {
+			mouseHold = false;
+		}
 		
 	}
 
@@ -50,9 +70,6 @@ public class Menu extends State implements Statemethods {
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-			Gamestate.state = Gamestate.PLAYING;
-		}
 	}
 
 	@Override
@@ -61,4 +78,7 @@ public class Menu extends State implements Statemethods {
 		
 	}
 	
+	private void playGame() {
+		Gamestate.state = Gamestate.PLAYING;
+	}
 }

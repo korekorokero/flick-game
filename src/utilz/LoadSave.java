@@ -12,6 +12,7 @@ public class LoadSave {
 	public static final String LEVEL_ATLAS = "level.png";
 	public static final String LEVEL_ONE_DATA = "level1.png";
 	public static final String TEST_LEVEL_DATA = "test.png";
+	public static final String MENU_ATLAS = "menu.png";
 	
 	public static BufferedImage getSpriteAtlas(String filename) {
 		BufferedImage img = null;
@@ -33,14 +34,14 @@ public class LoadSave {
 	}
 	
 	public static int[][] getLevelData(String level) {
-		int[][] lvlData = new int[16][18];
 		BufferedImage img = getSpriteAtlas(level);
+		int[][] lvlData = new int[img.getWidth()][img.getHeight()];
 		
-		for(int i = 0; i < 16; i++) {
-			for(int j = 0; j < 18; j++) {
+		for(int i = 0; i < img.getWidth(); i++) {
+			for(int j = 0; j < img.getHeight(); j++) {
 				Color color = new Color(img.getRGB(i, j));
 				int value = color.getRed();
-				if(value >= 34) {
+				if(value >= 66) {
 					value = -1;
 				}
 				lvlData[i][j] = value;

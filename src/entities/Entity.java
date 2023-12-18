@@ -8,7 +8,7 @@ public class Entity {
 	protected float x, y, speed;
 	protected int width, height, finalWidth, finalHeight;
 	public boolean gameMode = false;
-	public final static int sizeMultiplier = 2;
+	public final static int sizeMultiplier = 1;
 	protected Rectangle hitbox;
 	
 	public Entity(float x, float y, int width, int height, float speed) {

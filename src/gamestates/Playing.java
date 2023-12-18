@@ -4,8 +4,7 @@ import entities.Player;
 import levels.LevelManager;
 import main.Game;
 import main.GameArea;
-import static main.Game.GAME_HEIGHT;
-import static main.Game.GAME_WIDTH;
+import utilz.LoadSave;
 
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
@@ -18,6 +17,17 @@ public class Playing extends State implements Statemethods {
 	private boolean switchMode = true;
 	private boolean currentMode = false;
 	
+	private int xLvlOffset, yLvlOffset;
+	private int leftBorder = (int)(0.25 * Game.GAME_WIDTH);
+	private int rightBorder = (int)(0.75 * Game.GAME_WIDTH) - Game.TILES_SIZE;
+	private int upBorder = (int)(0.25 * Game.GAME_HEIGHT);
+	private int downBorder = (int)(0.75 * Game.GAME_HEIGHT) - Game.TILES_SIZE;
+	private int lvlTiles = LoadSave.getLevelData(LoadSave.TEST_LEVEL_DATA)[0].length / 2;
+	private int maxTilesOffsetX = lvlTiles - Game.TILES_IN_WIDTH;
+	private int maxTilesOffsetY = lvlTiles - Game.TILES_IN_HEIGHT;
+	private int maxLvlOffsetX = maxTilesOffsetX * Game.TILES_SIZE + (int)(Game.GAME_WIDTH * (Game.SCALE - 1));
+	private int maxLvlOffsetY = maxTilesOffsetY * Game.TILES_SIZE + (int)((Game.GAME_WIDTH + 128) * (Game.SCALE - 1)) / 2;
+	
 	public Playing(Game game) {
 		super(game);
 		initClasses();
@@ -25,8 +35,8 @@ public class Playing extends State implements Statemethods {
 	
 	private void initClasses() {
 		levelManager = new LevelManager(game);
-		area = new GameArea(0, 0, GAME_WIDTH, GAME_HEIGHT);
-		player = new Player(0, 0, 32, 32, 4);
+		area = new GameArea(0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT);
+		player = new Player(96, 96, Game.TILES_SIZE, Game.TILES_SIZE, Game.TILES_SIZE / 16);
 		player.loadLvlData(levelManager.getCurrentLevel().getLevelData());
 	}
 	
@@ -45,15 +55,51 @@ public class Playing extends State implements Statemethods {
 	@Override
 	public void update() {
 		area.update();
-		player.update();
 		levelManager.update();
+		player.update();
+		checkCloseToBorder();
+	}
+	
+	private void checkCloseToBorder() {
+		int playerX = player.getHitbox().x;
+		int playerY = player.getHitbox().y;
+		int diffX = playerX - xLvlOffset;
+		int diffY = playerY - yLvlOffset;
+		
+		if(diffX > rightBorder) {
+			xLvlOffset += diffX - rightBorder;
+		}
+		else if(diffX < leftBorder) {
+			xLvlOffset += diffX - leftBorder;
+		}
+		
+		if(diffY < upBorder) {
+			yLvlOffset += diffY - upBorder;
+		}
+		else if(diffY > downBorder) {
+			yLvlOffset += diffY - downBorder;
+		}
+		
+		if(xLvlOffset > maxLvlOffsetX) {
+			xLvlOffset = maxLvlOffsetX;
+		}
+		else if(xLvlOffset < 0) {
+			xLvlOffset = 0;
+		}
+		
+		if(yLvlOffset > maxLvlOffsetY) {
+			yLvlOffset = maxLvlOffsetY;
+		}
+		else if(yLvlOffset < 0) {
+			yLvlOffset = 0;
+		}
 	}
 
 	@Override
 	public void draw(Graphics g) {
 		area.draw(g);
-		player.draw(g);
-		levelManager.draw(g);
+		levelManager.draw(g, xLvlOffset, yLvlOffset);
+		player.draw(g, xLvlOffset, yLvlOffset);
 	}
 
 	@Override

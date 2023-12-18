@@ -19,11 +19,12 @@ public class HelpMethods {
 	}
 	
 	private static boolean isSolid(float x, float y, int[][] lvlData, boolean gameMode) {
-		if (x < 0 || x >= Game.GAME_WIDTH) {
+		int maxHW = lvlData[0].length * Game.TILES_SIZE / 2;
+		if (x < 0 || x >= maxHW) {
 			return true;
 		}
 		
-		if (y < 0 || y >= Game.GAME_HEIGHT) {
+		if (y < 0 || y >= maxHW) {
 			return true;
 		}
 		
@@ -33,7 +34,7 @@ public class HelpMethods {
 			yIndex = y / Game.TILES_SIZE;
 		}
 		else {
-			yIndex = (y + Game.GAME_HEIGHT) / Game.TILES_SIZE;
+			yIndex = (y + maxHW) / Game.TILES_SIZE;
 		}
 		
 		int value = lvlData[(int)xIndex][(int)yIndex];

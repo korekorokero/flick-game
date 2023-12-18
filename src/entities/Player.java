@@ -53,7 +53,7 @@ public class Player extends Entity {
 		}
 	}
 	
-	public void draw(Graphics g) {
+	public void draw(Graphics g, int xLvlOffset, int yLvlOffset) {
 		int change;
 		if (gameMode) {
 			change = 32;
@@ -62,11 +62,11 @@ public class Player extends Entity {
 			change = 0;
 		}
 		
-		BufferedImage subImg = img.getSubimage(0 + 32 * multiplier, change, width, height);
+		BufferedImage subImg = img.getSubimage(0 + 32 * multiplier, change, 32, 32);
 		
-		g.drawImage(subImg, (int)x, (int)y, finalWidth, finalHeight, null);
-		drawHitbox(g);
-//		System.out.println((x + 63) + " " + (y + 63));
+		g.drawImage(subImg, (int)x - xLvlOffset, (int)y - yLvlOffset, finalWidth, finalHeight, null);
+//		drawHitbox(g);
+//		System.out.println((x) + " " + (y));
 	}
 	
 	public void loadLvlData(int[][] lvlData) {
@@ -75,8 +75,7 @@ public class Player extends Entity {
 	
 	private void inWall() {
 		if(!canMoveHere(x, y, finalWidth, finalHeight, lvlData, gameMode)) {
-			x = 0;
-			y = 0;
+			x = y = 64;
 		}
 	}
 }
