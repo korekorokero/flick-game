@@ -6,6 +6,7 @@ import main.Game;
 import main.GameArea;
 import utilz.LoadSave;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -16,6 +17,8 @@ public class Playing extends State implements Statemethods {
 	private LevelManager levelManager;
 	private boolean switchMode = true;
 	private boolean currentMode = false;
+	private boolean gameOver = false;
+	private boolean gameCompleted = false;
 	
 	private int xLvlOffset, yLvlOffset;
 	private int leftBorder = (int)(0.25 * Game.GAME_WIDTH);
@@ -36,7 +39,7 @@ public class Playing extends State implements Statemethods {
 	private void initClasses() {
 		levelManager = new LevelManager(game);
 		area = new GameArea(0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT);
-		player = new Player(96, 96, Game.TILES_SIZE, Game.TILES_SIZE, Game.TILES_SIZE / 16);
+		player = new Player(LoadSave.startX * 96, LoadSave.startY * 96, Game.TILES_SIZE, Game.TILES_SIZE, Game.TILES_SIZE / 16, this);
 		player.loadLvlData(levelManager.getCurrentLevel().getLevelData());
 	}
 	
@@ -100,6 +103,12 @@ public class Playing extends State implements Statemethods {
 		area.draw(g);
 		levelManager.draw(g, xLvlOffset, yLvlOffset);
 		player.draw(g, xLvlOffset, yLvlOffset);
+		if(gameOver) {
+			drawGameOverOverlay(g);
+		}
+		else if(gameCompleted) {
+			drawGameCompletedOverlay(g);
+		}
 	}
 
 	@Override
@@ -132,24 +141,43 @@ public class Playing extends State implements Statemethods {
 		
 		switch(code) {
 			case KeyEvent.VK_W:
-				player.upPressed = true;
+				if(!gameOver && !gameCompleted) {					
+					player.upPressed = true;
+				}
 				break;
 			case KeyEvent.VK_S:
-				player.downPressed = true;
+				if(!gameOver && !gameCompleted) {					
+					player.downPressed = true;
+				}
 				break;
 			case KeyEvent.VK_A:
-				player.leftPressed = true;
+				if(!gameOver && !gameCompleted) {					
+					player.leftPressed = true;
+				}
 				break;
 			case KeyEvent.VK_D:
-				player.rightPressed = true;
+				if(!gameOver && !gameCompleted) {					
+					player.rightPressed = true;
+				}
 				break;
 			case KeyEvent.VK_SPACE:
-				setCurrentMode(switchMode);
-				player.gameMode = area.gameMode = levelManager.gameMode = currentMode;
+				if(!gameOver && !gameCompleted) {					
+					setCurrentMode(switchMode);
+					player.gameMode = area.gameMode = levelManager.gameMode = currentMode;
+				}
 				break;
-			case KeyEvent.VK_BACK_SPACE:
-				Gamestate.state = Gamestate.MENU;
+			case KeyEvent.VK_ENTER:
+				if(gameOver) {					
+					gameOver = false;
+					initClasses();
+				}
 				break;
+			case KeyEvent.VK_ESCAPE:
+				if(gameOver || gameCompleted) {
+					gameOver = gameCompleted = false;
+					Gamestate.state = Gamestate.MENU;
+					initClasses();
+				}
 			default:
 				break;
 		}
@@ -178,5 +206,32 @@ public class Playing extends State implements Statemethods {
 
 	private void setCurrentMode(boolean currentMode) {
 		this.currentMode = currentMode;
+	}
+	
+	public void setGameOver(boolean gameOver) {
+		this.gameOver = gameOver;
+	}
+	
+	public void setGameCompleted(boolean gameCompleted) {
+		this.gameCompleted = gameCompleted;
+	}
+	
+	private void drawGameOverOverlay(Graphics g) {
+		g.setColor(new Color(0, 0, 0, 200));
+		g.fillRect(0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT);
+
+		g.setColor(Color.white);
+		g.drawString("Game Over", Game.GAME_WIDTH / 2, 150);
+		g.drawString("Press esc to enter Main Menu!", Game.GAME_WIDTH / 2, 300);
+		g.drawString("Press enter to try again!", Game.GAME_WIDTH / 2, 350);
+	}
+	
+	private void drawGameCompletedOverlay(Graphics g) {
+		g.setColor(new Color(0, 0, 0, 200));
+		g.fillRect(0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT);
+
+		g.setColor(Color.white);
+		g.drawString("Game Completed", Game.GAME_WIDTH / 2, 150);
+		g.drawString("Press esc to enter Main Menu!", Game.GAME_WIDTH / 2, 300);
 	}
 }

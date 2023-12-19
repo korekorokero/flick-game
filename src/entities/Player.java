@@ -1,8 +1,11 @@
 package entities;
 
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
+import gamestates.Playing;
+import main.Game;
 import utilz.LoadSave;
 import static utilz.HelpMethods.canMoveHere;;
 
@@ -11,16 +14,24 @@ public class Player extends Entity {
 	private BufferedImage img = LoadSave.getSpriteAtlas(LoadSave.PLAYER_ATLAS);
 	private int multiplier;
 	private int[][] lvlData;
+	private Playing playing;
+	private Rectangle goalBox;
 	
-	public Player(float x, float y, int width, int height, float speed) {
+	public Player(float x, float y, int width, int height, float speed, Playing playing) {
 		super(x, y, width, height, speed);
 		multiplier = 0;
+		this.playing = playing;
+		goalBox = new Rectangle(LoadSave.endX * 96, LoadSave.endY * 96, Game.TILES_SIZE, Game.TILES_SIZE);
 	}
 	
 	public void update() {
+		inWall();
+		if(isDead) {
+			return;
+		}
 		updatePos();
 		updateHitbox();
-		inWall();
+		goalChecker();
 	}
 
 	public void updatePos() {
@@ -66,7 +77,6 @@ public class Player extends Entity {
 		
 		g.drawImage(subImg, (int)x - xLvlOffset, (int)y - yLvlOffset, finalWidth, finalHeight, null);
 //		drawHitbox(g);
-//		System.out.println((x) + " " + (y));
 	}
 	
 	public void loadLvlData(int[][] lvlData) {
@@ -74,8 +84,15 @@ public class Player extends Entity {
 	}
 	
 	private void inWall() {
-		if(!canMoveHere(x, y, finalWidth, finalHeight, lvlData, gameMode)) {
-			x = y = 64;
+		if(!canMoveHere(x, y, finalWidth, finalHeight, lvlData, gameMode) && !isDead) {
+			isDead = true;
+			playing.setGameOver(true);
+		}
+	}
+	
+	private void goalChecker() {
+		if(!isDead && (x >= goalBox.getMinX() && x <= goalBox.getMaxX()) && (y >= goalBox.getMinY() && y <= goalBox.getMaxY()) && gameMode){
+			playing.setGameCompleted(true);
 		}
 	}
 }

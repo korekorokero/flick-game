@@ -10,6 +10,7 @@ public class Entity {
 	public boolean gameMode = false;
 	public final static int sizeMultiplier = 1;
 	protected Rectangle hitbox;
+	protected boolean isDead = false;
 	
 	public Entity(float x, float y, int width, int height, float speed) {
 		this.x = x;

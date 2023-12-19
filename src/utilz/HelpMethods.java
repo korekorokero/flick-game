@@ -39,7 +39,7 @@ public class HelpMethods {
 		
 		int value = lvlData[(int)xIndex][(int)yIndex];
 		
-		if (value != -1) {
+		if (value >= 0 && value <= 63) {
 			return true;
 		}
 		

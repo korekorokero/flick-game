@@ -13,6 +13,7 @@ public class LoadSave {
 	public static final String LEVEL_ONE_DATA = "level1.png";
 	public static final String TEST_LEVEL_DATA = "test.png";
 	public static final String MENU_ATLAS = "menu.png";
+	public static int startX, startY, endX, endY;
 	
 	public static BufferedImage getSpriteAtlas(String filename) {
 		BufferedImage img = null;
@@ -45,6 +46,15 @@ public class LoadSave {
 					value = -1;
 				}
 				lvlData[i][j] = value;
+				
+				if(value == 64) {
+					startX = i;
+					startY = j;
+				}
+				else if(value == 65) {
+					endX = i;
+					endY = j - 20;
+				}
 			}
 		}
 		return lvlData;
