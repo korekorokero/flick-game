@@ -34,27 +34,24 @@ public class Menu extends State implements Statemethods {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		if((e.getX() >= 384 && e.getX() <= 639) && (e.getY() >= 356 && e.getY() <= 447)) {
+		if((e.getX() >= 384 && e.getX() <= 639) && (e.getY() >= 356 && e.getY() <= 483)) {
 			playGame();
 		}
-		
+		System.out.println(e.getX() + " " + e.getY());
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		if((e.getX() >= 384 && e.getX() <= 639) && (e.getY() >= 356 && e.getY() <= 447)) {
+		if((e.getX() >= 384 && e.getX() <= 639) && (e.getY() >= 356 && e.getY() <= 483)) {
 			mouseHold = true;
 		}
-		else {
-			mouseHold = false;
-		}
-		
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		if(mouseHold && (e.getX() >= 384 && e.getX() <= 639) && (e.getY() >= 356 && e.getY() <= 447)) {
+		if(mouseHold && (e.getX() >= 384 && e.getX() <= 639) && (e.getY() >= 356 && e.getY() <= 483)) {
 			playGame();
+			mouseHold = false;
 		}
 		else {
 			mouseHold = false;

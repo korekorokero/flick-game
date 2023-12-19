@@ -19,6 +19,7 @@ public class Playing extends State implements Statemethods {
 	private boolean currentMode = false;
 	private boolean gameOver = false;
 	private boolean gameCompleted = false;
+	private boolean mouseHold = true;
 	
 	private int xLvlOffset, yLvlOffset;
 	private int leftBorder = (int)(0.25 * Game.GAME_WIDTH);
@@ -113,20 +114,68 @@ public class Playing extends State implements Statemethods {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+		if(gameOver) {			
+			if((e.getX() >= 416 && e.getX() <= 607) && (e.getY() >= 275 && e.getY() <= 370)) {
+				gameOver = false;
+				initClasses();
+			}
+			else if((e.getX() >= 416 && e.getX() <= 607) && (e.getY() >= 377 && e.getY() <= 472)) {
+				gameOver = gameCompleted = false;
+				Gamestate.state = Gamestate.MENU;
+				initClasses();
+			}
+		}
+		else if(gameCompleted) {
+			if((e.getX() >= 416 && e.getX() <= 607) && (e.getY() >= 377 && e.getY() <= 472)) {
+				gameOver = gameCompleted = false;
+				Gamestate.state = Gamestate.MENU;
+				initClasses();
+			}
+		}
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+		if(gameOver) {			
+			if((e.getX() >= 416 && e.getX() <= 607) && (e.getY() >= 275 && e.getY() <= 370)) {
+				mouseHold = true;
+			}
+			else if((e.getX() >= 416 && e.getX() <= 607) && (e.getY() >= 377 && e.getY() <= 472)) {
+				mouseHold = true;
+			}
+		}
+		else if(gameCompleted) {
+			if((e.getX() >= 416 && e.getX() <= 607) && (e.getY() >= 377 && e.getY() <= 472)) {
+				mouseHold = true;
+			}
+		}
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+		if(mouseHold) {
+			if(gameOver) {			
+				if((e.getX() >= 416 && e.getX() <= 607) && (e.getY() >= 275 && e.getY() <= 370)) {
+					gameOver = false;
+					initClasses();
+					mouseHold = false;
+				}
+				else if((e.getX() >= 416 && e.getX() <= 607) && (e.getY() >= 377 && e.getY() <= 472)) {
+					gameOver = gameCompleted = false;
+					Gamestate.state = Gamestate.MENU;
+					initClasses();
+					mouseHold = false;
+				}
+			}
+			else if(gameCompleted) {
+				if((e.getX() >= 416 && e.getX() <= 607) && (e.getY() >= 377 && e.getY() <= 472)) {
+					gameOver = gameCompleted = false;
+					Gamestate.state = Gamestate.MENU;
+					initClasses();
+					mouseHold = false;
+				}
+			}
+		}
 	}
 
 	@Override
@@ -166,18 +215,6 @@ public class Playing extends State implements Statemethods {
 					player.gameMode = area.gameMode = levelManager.gameMode = currentMode;
 				}
 				break;
-			case KeyEvent.VK_ENTER:
-				if(gameOver) {					
-					gameOver = false;
-					initClasses();
-				}
-				break;
-			case KeyEvent.VK_ESCAPE:
-				if(gameOver || gameCompleted) {
-					gameOver = gameCompleted = false;
-					Gamestate.state = Gamestate.MENU;
-					initClasses();
-				}
 			default:
 				break;
 		}
@@ -219,19 +256,10 @@ public class Playing extends State implements Statemethods {
 	private void drawGameOverOverlay(Graphics g) {
 		g.setColor(new Color(0, 0, 0, 200));
 		g.fillRect(0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT);
-
-		g.setColor(Color.white);
-		g.drawString("Game Over", Game.GAME_WIDTH / 2, 150);
-		g.drawString("Press esc to enter Main Menu!", Game.GAME_WIDTH / 2, 300);
-		g.drawString("Press enter to try again!", Game.GAME_WIDTH / 2, 350);
 	}
 	
 	private void drawGameCompletedOverlay(Graphics g) {
 		g.setColor(new Color(0, 0, 0, 200));
 		g.fillRect(0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT);
-
-		g.setColor(Color.white);
-		g.drawString("Game Completed", Game.GAME_WIDTH / 2, 150);
-		g.drawString("Press esc to enter Main Menu!", Game.GAME_WIDTH / 2, 300);
 	}
 }
