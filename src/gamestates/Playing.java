@@ -10,6 +10,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 
 public class Playing extends State implements Statemethods {
 	private GameArea area;
@@ -20,6 +21,7 @@ public class Playing extends State implements Statemethods {
 	private boolean gameOver = false;
 	private boolean gameCompleted = false;
 	private boolean mouseHold = true;
+	private BufferedImage gameOverImg, gameCompletedImg;
 	
 	private int xLvlOffset, yLvlOffset;
 	private int leftBorder = (int)(0.25 * Game.GAME_WIDTH);
@@ -35,6 +37,8 @@ public class Playing extends State implements Statemethods {
 	public Playing(Game game) {
 		super(game);
 		initClasses();
+		gameOverImg = LoadSave.getSpriteAtlas(LoadSave.GAME_OVER_LAYOUT);
+		gameCompletedImg = LoadSave.getSpriteAtlas(LoadSave.GAME_COMPLETED_LAYOUT);
 	}
 	
 	private void initClasses() {
@@ -122,14 +126,12 @@ public class Playing extends State implements Statemethods {
 			else if((e.getX() >= 416 && e.getX() <= 607) && (e.getY() >= 377 && e.getY() <= 472)) {
 				gameOver = gameCompleted = false;
 				Gamestate.state = Gamestate.MENU;
-				initClasses();
 			}
 		}
 		else if(gameCompleted) {
 			if((e.getX() >= 416 && e.getX() <= 607) && (e.getY() >= 377 && e.getY() <= 472)) {
 				gameOver = gameCompleted = false;
 				Gamestate.state = Gamestate.MENU;
-				initClasses();
 			}
 		}
 	}
@@ -256,10 +258,14 @@ public class Playing extends State implements Statemethods {
 	private void drawGameOverOverlay(Graphics g) {
 		g.setColor(new Color(0, 0, 0, 200));
 		g.fillRect(0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT);
+		
+		g.drawImage(gameOverImg, 128, 72, 768, 432, null);
 	}
 	
 	private void drawGameCompletedOverlay(Graphics g) {
 		g.setColor(new Color(0, 0, 0, 200));
 		g.fillRect(0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT);
+		
+		g.drawImage(gameCompletedImg, 128, 72, 768, 432, null);
 	}
 }

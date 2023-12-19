@@ -1,15 +1,14 @@
 /entities/
-/gamestates/
-/inputs/
-/levels/
-/main/
-/module-info.class
-/utilz/
-/pixil-frame-0 (4).png
-/level1.png
-/pixil-frame-0 (5).png
-/pixil-frame-0 (6).png
-/pixil-frame-0 (7).png
-/pixil-frame-0 (8).png
 /game_completed.png
 /game_over.png
+/gamestates/
+/inputs/
+/level.png
+/level1.png
+/levels/
+/main/
+/menu.png
+/module-info.class
+/player.png
+/test.png
+/utilz/

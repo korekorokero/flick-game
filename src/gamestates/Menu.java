@@ -37,7 +37,6 @@ public class Menu extends State implements Statemethods {
 		if((e.getX() >= 384 && e.getX() <= 639) && (e.getY() >= 356 && e.getY() <= 483)) {
 			playGame();
 		}
-		System.out.println(e.getX() + " " + e.getY());
 	}
 
 	@Override
